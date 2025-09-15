@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/user_auth/sign_up.html" }
+  ]
+}
