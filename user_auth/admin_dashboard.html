@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Car Rental</title>
+  <!-- Include Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white py-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center px-4">
+      <h1 class="text-xl font-bold">Admin Dashboard</h1>
+      <p class="text-sm">Welcome, Admin</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-6">
+    <!-- Add Car Form -->
+    <section>
+      <h2 class="text-2xl font-bold mb-4">Add a New Car</h2>
+      <form id="addCarForm" class="bg-white shadow-md rounded px-8 py-6 mb-6">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="make" class="block text-gray-700 font-bold mb-2">Make</label>
+            <input type="text" id="make" name="make" class="w-full border-gray-300 rounded px-4 py-2" required>
+          </div>
+          <div>
+            <label for="model" class="block text-gray-700 font-bold mb-2">Model</label>
+            <input type="text" id="model" name="model" class="w-full border-gray-300 rounded px-4 py-2" required>
+          </div>
+          <div>
+            <label for="year" class="block text-gray-700 font-bold mb-2">Year</label>
+            <input type="number" id="year" name="year" class="w-full border-gray-300 rounded px-4 py-2" required>
+          </div>
+          <div>
+            <label for="price" class="block text-gray-700 font-bold mb-2">Price</label>
+            <input type="number" id="price" name="price" class="w-full border-gray-300 rounded px-4 py-2" required>
+          </div>
+          <div>
+            <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
+            <textarea id="description" name="description" class="w-full border-gray-300 rounded px-4 py-2" required></textarea>
+          </div>
+          <div>
+            <label for="color" class="block text-gray-700 font-bold mb-2">Color</label>
+            <input type="text" id="color" name="color" class="w-full border-gray-300 rounded px-4 py-2">
+          </div>
+          <div>
+            <label for="brand" class="block text-gray-700 font-bold mb-2">Brand</label>
+            <input type="text" id="brand" name="brand" class="w-full border-gray-300 rounded px-4 py-2">
+          </div>
+          <div>
+            <label for="image" class="block text-gray-700 font-bold mb-2">Image</label>
+            <input type="file" id="image" name="image" accept="image/*" class="w-full border-gray-300 rounded px-4 py-2" required>
+          </div>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white font-bold rounded px-4 py-2 mt-4 hover:bg-blue-700">
+          Add Car
+        </button>
+      </form>
+    </section>
+
+    <!-- Car List -->
+    <section>
+  <h2 class="text-2xl font-bold mb-4">Added Cars</h2>
+  <div id="carList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Cars will be dynamically added here -->
+  </div>
+</section>
+  </main>
+
+  <!-- Include JavaScript -->
+  <script src="admin_dashboard.js"></script>
+</body>
+</html>
