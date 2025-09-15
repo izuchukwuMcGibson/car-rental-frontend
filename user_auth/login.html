@@ -110,10 +110,106 @@
         </p>
     </div>
 
-    <script src="auth.js"></script>
+    <!-- Inline JavaScript -->
     <script>
-        // Initialize login functionality
-        initializeLogin();
+        const API_BASE_URL = 'https://car-rental-api-ks0u.onrender.com/api/users';
+
+        function showError(message, elementId = 'errorMessage') {
+            const errorDiv = document.getElementById(elementId);
+            const errorText = document.getElementById('errorText');
+            
+            if (errorDiv && errorText) {
+                errorText.textContent = message;
+                errorDiv.classList.remove('hidden');
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    errorDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        function showSuccess(message, elementId = 'successMessage') {
+            const successDiv = document.getElementById(elementId);
+            const successText = document.getElementById('successText');
+            
+            if (successDiv && successText) {
+                successText.textContent = message;
+                successDiv.classList.remove('hidden');
+                
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                    successDiv.classList.add('hidden');
+                }, 3000);
+            }
+        }
+
+        async function loginUser(credentials) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(credentials),
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                return data;
+            } catch (error) {
+                console.error('Login error:', error);
+                throw error;
+            }
+        }
+
+        function initializePasswordToggle() {
+            const togglePassword = document.getElementById('togglePassword');
+            if (togglePassword) {
+                togglePassword.addEventListener('click', () => {
+                    const passwordInput = document.getElementById('password');
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        togglePassword.querySelector('i').classList.replace('fa-eye', 'fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        togglePassword.querySelector('i').classList.replace('fa-eye-slash', 'fa-eye');
+                    }
+                });
+            }
+        }
+
+        function initializeLogin() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+
+                    try {
+                        const userData = await loginUser({ email, password });
+                        if (userData.token) {
+                            localStorage.setItem('authToken', userData.token);
+                            showSuccess('Login successful! Redirecting...');
+                            setTimeout(() => {
+                                window.location.href = 'user_dashboard.html';
+                            }, 1500);
+                        }
+                    } catch (error) {
+                        showError(error.message);
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePasswordToggle();
+            initializeLogin();
+        });
     </script>
 </body>
 </html>

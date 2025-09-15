@@ -1,5 +1,6 @@
 // Configuration
-import { API_BASE_URL } from './config.js'
+const API_BASE_URL = 'https://car-rental-api-ks0u.onrender.com/api/users'
+
 
 // Utility Functions
 function showError(message, elementId = 'errorMessage') {
@@ -105,13 +106,6 @@ async function signupUser(userData) {
     });
 }
 
-async function loginUser(credentials) {
-    return await makeAPICall('/login', {
-        method: 'POST',
-        body: JSON.stringify(credentials)
-    });
-}
-
 // Password Toggle Functionality
 function initializePasswordToggle() {
     const toggleButtons = document.querySelectorAll('#togglePassword');
@@ -192,7 +186,7 @@ function initializeSignup() {
                 
                 // Optionally redirect to login page after success
                 setTimeout(() => {
-                    window.location.href = 'login.html';
+                    window.location.href = './user_auth/login.html';
                 }, 2000);
                 
             } catch (error) {
@@ -204,108 +198,7 @@ function initializeSignup() {
     }
 }
 
-// Login Functionality
-function initializeLogin() {
-    const loginForm = document.getElementById('loginForm');
-    
-    // Initialize password toggle
-    initializePasswordToggle();
-    
-    // Handle form submission
-    if (loginForm) {
-        loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const credentials = {
-                email: formData.get('email'),
-                password: formData.get('password')
-            };
-            
-            // Validation
-            if (!validateEmail(credentials.email)) {
-                showError('Please enter a valid email address');
-                return;
-            }
-            
-            if (!credentials.password) {
-                showError('Please enter your password');
-                return;
-            }
-            
-            try {
-                setLoading(true, 'loginBtn', 'loginBtnText', 'loginLoader');
-                hideError();
-                
-                const response = await loginUser(credentials);
-                
-                // Store authentication data
-                if (response.token) {
-                    localStorage.setItem('authToken', response.token);
-                    localStorage.setItem('user', JSON.stringify(response.user));
-                    
-                    showSuccess('Login successful! Redirecting...');
-                    
-                    // Redirect to dashboard or main app
-                    setTimeout(() => {
-                        window.location.href = 'user_dashboard.html'; // Change this to your main app page
-                    }, 1500);
-                } else {
-                    showError('Login failed. Please check your credentials.');
-                }
-                
-            } catch (error) {
-                showError(error.message || 'Login failed. Please try again.');
-            } finally {
-                setLoading(false, 'loginBtn', 'loginBtnText', 'loginLoader');
-            }
-        });
-    }
-}
-
-// Authentication State Management
-function isAuthenticated() {
-    return localStorage.getItem('authToken') !== null;
-}
-
-function getAuthToken() {
-    return localStorage.getItem('authToken');
-}
-
-function getCurrentUser() {
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
-}
-
-function logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
-}
-
-// Protected route function
-function requireAuth() {
-    if (!isAuthenticated()) {
-        window.location.href = 'login.html';
-        return false;
-    }
-    return true;
-}
-
-// Add authorization header to API calls
-function makeAuthenticatedAPICall(endpoint, options = {}) {
-    const token = getAuthToken();
-    return makeAPICall(endpoint, {
-        ...options,
-        headers: {
-            ...options.headers,
-            'Authorization': `Bearer ${token}`
-        }
-    });
-}
-
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Add any global initialization here
-    console.log('Auth system initialized');
+    initializeSignup();
 });
