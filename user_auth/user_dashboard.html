@@ -92,9 +92,17 @@
   </div>
 
   <script>
+
     let cars = [];
     let selectedCarId = null;
-
+// Get token from URL if present (for social login/signup)
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+if (token) {
+  localStorage.setItem("authToken", token);
+  // Optionally, clean up the URL so token isn't visible anymore:
+  window.history.replaceState({}, document.title, "user_dashboard.html");
+}
     async function fetchUserDetails() {
       try {
         const authToken = localStorage.getItem('authToken');

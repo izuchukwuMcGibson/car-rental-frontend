@@ -10,7 +10,15 @@ document.getElementById('addCarForm').addEventListener('submit', async function 
   formData.append('color', document.getElementById('color').value);
   formData.append('brand', document.getElementById('brand').value);
   formData.append('image', document.getElementById('image').files[0]);
-
+  
+// Get token from URL if present (for social login/signup)
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+if (token) {
+  localStorage.setItem("authToken", token);
+  // Optionally, clean up the URL so token isn't visible anymore:
+  window.history.replaceState({}, document.title, "user_dashboard.html");
+}
   const authToken = localStorage.getItem('authToken');
 
   if (!authToken) {
