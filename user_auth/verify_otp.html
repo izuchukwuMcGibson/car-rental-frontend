@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 400px; margin: 40px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+    input, button { width: 100%; padding: 8px; margin: 10px 0; }
+    .msg { color: green; margin-top: 10px; }
+    .err { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Verify OTP</h2>
+    <form id="otpForm">
+      <label for="otp">OTP:</label>
+      <input type="text" id="otp" required>
+      <button type="submit">Verify OTP</button>
+    </form>
+    <div id="feedback"></div>
+  </div>
+  <script>
+    // Get email from query string
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get('email');
+    document.getElementById('otpForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const otp = document.getElementById('otp').value;
+      const feedback = document.getElementById('feedback');
+      if (!email) {
+        feedback.innerHTML = `<span class="err">Missing email. Return to Forgot Password.</span>`;
+        return;
+      }
+      try {
+        const res = await fetch('https://car-rental-api-ks0u.onrender.com/api/users/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp })
+        });
+        const data = await res.json();
+        if(res.ok) {
+          feedback.innerHTML = `<span class="msg">${data.message || "OTP verified!"}</span>`;
+          // Redirect to reset-password.html with userId
+          if(data.userId) {
+            setTimeout(() => {
+              window.location.href = `reset-password.html?userId=${data.userId}`;
+            }, 1500);
+          }
+        } else {
+          feedback.innerHTML = `<span class="err">${data.message || "Invalid OTP."}</span>`;
+        }
+      } catch (err) {
+        feedback.innerHTML = `<span class="err">Network error.</span>`;
+      }
+    };
+  </script>
+</body>
+</html>
